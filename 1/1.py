@@ -18,6 +18,21 @@ numbersAsText = {
     "nine": 9,
 }
 
+def getFirstDigit(input: str):
+    index = 0
+    while True:
+        if input[index].isdigit():
+            return int(input[index])
+        index = index + 1
+
+def getLastDigit(input: str):
+    index = len(input) - 1
+    while True:
+        if input[index].isdigit():
+            return int(input[index])
+        index = index - 1
+    
+
 def getFirstNumber(input: str):
     numbersFound = {}
     for number in numbersAsText.items():
@@ -47,31 +62,7 @@ def getLastNumber(input: str):
     sortedFilteredIndexes = list(filter(lambda i : i[1] != - 1, sortedIndexes))
     return sortedFilteredIndexes[0][0]
 
-def calculate(inputFile):
-    directory = os.path.dirname(os.path.abspath(sys.argv[0]))
-    inputLines = parseInput(directory + '/' + inputFile)
-    total = 0
-    for inputLine in inputLines:
-        numberFound = False
-        firstValue = 0
-        index = 0
-        while numberFound == False:
-            if inputLine[index].isdigit():
-                firstValue = int(inputLine[index])
-                numberFound = True
-            index = index + 1
-        numberFound = False
-        lastValue = 0
-        index = len(inputLine) - 1
-        while numberFound == False:
-            if inputLine[index].isdigit():
-                lastValue = int(inputLine[index])
-                numberFound = True
-            index = index - 1
-        total = total + int(str(firstValue) + str(lastValue))
-    print(inputFile + ": " + str(total))
-
-def calculate2(inputFile):
+def calculate(inputFile, getFirstNumber, getLastNumber):
     directory = os.path.dirname(os.path.abspath(sys.argv[0]))
     inputLines = parseInput(directory + '/' + inputFile)
     total = 0
@@ -79,7 +70,7 @@ def calculate2(inputFile):
         total = total + int(str(getFirstNumber(inputLine)) + str(getLastNumber(inputLine)))
     print(inputFile + ": " + str(total))
 
-calculate("example.txt")
-calculate("input.txt")
-calculate2("example2.txt")
-calculate2("input.txt")
+calculate("example.txt", getFirstDigit, getLastDigit)
+calculate("input.txt", getFirstDigit, getLastDigit)
+calculate("example2.txt", getFirstNumber, getLastNumber)
+calculate("input.txt", getFirstNumber, getLastNumber)
