@@ -54,5 +54,37 @@ def getValueForInput(filename: str):
     print(filename + ": " + str(value))
     return value
 
+def getMinCubesForGame(game: Game):
+    mins: dict[str, int] = {}
+    draws = list(game.draws)
+    for color in maximums.keys():
+        min = 0
+        for draw in draws:
+            if (draw.get(color) or 0) > min:
+                min = draw[color]
+            else:
+                x = 9
+        mins[color] = min
+    return mins
+
+def calculateTotalPower(games: list[Game]):
+    totalPowers = 0
+    for game in games:
+        minColors = getMinCubesForGame(game)
+        power = 1
+        for color in minColors:
+            power = power * minColors[color]
+        totalPowers = totalPowers + power
+    return totalPowers
+            
+
+def getPowerForInput(filename: str):
+    games = parseInput(filename)
+    value = calculateTotalPower(games)
+    print(filename + ": " + str(value))
+    return value 
+
 getValueForInput("./2/example.txt")
 getValueForInput("./2/input.txt")
+getPowerForInput("./2/example.txt")
+getPowerForInput("./2/input.txt")
