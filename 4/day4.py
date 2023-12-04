@@ -22,18 +22,37 @@ def parseInput(filename):
         cards.append(Card(id, winningNumbers, yourNumbers))
     return cards
 
+def countMatchesOnCard(card: Card):
+    matches = 0
+    for yourNumber in card.yourNumbers:
+        if yourNumber in card.winningNumbers: matches += 1
+    return matches
+
 def calculateScore(cards: list[Card]):
     total = 0
     for card in cards:
-        matches = 0
-        for yourNumber in card.yourNumbers:
-            if yourNumber in card.winningNumbers: matches += 1
+        matches = countMatchesOnCard(card)
         if matches > 0 : total += 2 ** (matches - 1)
     return total
 
-def calculateScoreForFile(filename):
-    cards = parseInput(filename)
-    print(filename + ": " + str(calculateScore(cards)))
+def calculateCards(cards: list[Card]):
+    cardWins = {}
+    for card in cards:
+        previouslyCalculatedWins = cardWins.get(card.id)
+        wins = []
+        if previouslyCalculatedWins == None:
+            matches = countMatchesOnCard(card)
+            wins = cards[slice(card.id, card.id + matches)]
+            cardWins[card.id] = wins
+        else: wins = previouslyCalculatedWins
+        for wonCard in wins: cards.append(wonCard)
+    return len(cards)
 
-calculateScoreForFile("./4/example.txt")
-calculateScoreForFile("./4/input.txt")
+def calculateScoreForFile(filename, scorer):
+    cards = parseInput(filename)
+    print(filename + ": " + str(scorer(cards)))
+
+calculateScoreForFile("./4/example.txt", calculateScore)
+calculateScoreForFile("./4/input.txt", calculateScore)
+calculateScoreForFile("./4/example.txt", calculateCards)
+calculateScoreForFile("./4/input.txt", calculateCards)
